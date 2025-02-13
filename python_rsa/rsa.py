@@ -1,7 +1,9 @@
 import random
 import math
 
-def RSA(p, q):
+def RSA_keys():
+    p = random.randint(10000, 99999)
+    q = random.randint(10000, 99999)
     N = p * q
     fi = (p - 1) * (q - 1)
     e = random.randint(1, fi)
@@ -27,12 +29,7 @@ def Euclid_alg(a, b):
         y1 = y 
     return x2, y2
 
-
-
-
 if __name__ == "__main__":
-    p = int(input("\np: "))
-    q = int(input("\nq: "))
-    e, d, N = RSA(p,q)
+    e, d, N = RSA_keys()
     print(f"\nОткрытый ключ:{e},{N}\n"+
         f"Закрытый ключ:{d},{N}")
