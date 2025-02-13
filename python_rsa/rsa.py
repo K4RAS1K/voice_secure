@@ -6,26 +6,23 @@ class RSA():
         e,d,N = self.__RSA_keys()
         self.open_keys = [e,N] 
         self.close_keys = [d,N] 
+    
+    def secure_message():
+         
+
     def __RSA_keys(self):
         p = random.randint(10000, 99999)
         q = random.randint(10000, 99999)
         N = p * q
         fi = (p - 1) * (q - 1)
         d = random.randint(1, fi)
-        arg1,arg2 = self.__gcd(d, fi)
+        arg1,arg2 = self.__Euclid_alg(d, fi)
         e = int(fi - math.fabs(min(arg1, arg2)))
+        print((e * d) % fi)
         if((e * d) % fi != 1):
                 print("ERROR!!!")
-                print((e * d) % fi)
+                e,d,N = self.__RSA_keys()
         return e, d, N
-
-    def __gcd(self,a,b):
-        if(a == 0):
-            return 0, 1
-        x1,y1 = self.__gcd(b % a, a)
-        x = y1 - ((b / a) * x1)
-        y = x1
-        return x1, y1
 
     def __Euclid_alg(self,a, b):
         x1 = 0
@@ -44,6 +41,7 @@ class RSA():
             y2 = y1 
             y1 = y 
         return x2, y2
+
 
 if __name__ == "__main__":
     my_rsa = RSA()
