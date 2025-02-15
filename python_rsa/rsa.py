@@ -1,49 +1,79 @@
 import random
-import math
 
-class RSA():
-    def __init__(self):
-        e,d,N = self.__RSA_keys()
-        self.open_keys = [e,N] 
-        self.close_keys = [d,N] 
+def power(base, expo, m):
+    res = 1
+    base = base % m
+    while expo > 0:
+        if expo & 1:
+            res = (res * base) % m
+        base = (base * base) % m
+        expo = expo // 2
+    return res
+
+def mod_inverse(e, phi):
+    for d in range(2, phi):
+        if (e * d) % phi == 1:
+            return d
+    return -1
+
+def generateKeys():
+    p, q = generate_prime()
     
-    def secure_message():
-         
+    n = p * q
+    phi = (p - 1) * (q - 1)
 
-    def __RSA_keys(self):
-        p = random.randint(10000, 99999)
-        q = random.randint(10000, 99999)
-        N = p * q
-        fi = (p - 1) * (q - 1)
-        d = random.randint(1, fi)
-        arg1,arg2 = self.__Euclid_alg(d, fi)
-        e = int(fi - math.fabs(min(arg1, arg2)))
-        print((e * d) % fi)
-        if((e * d) % fi != 1):
-                print("ERROR!!!")
-                e,d,N = self.__RSA_keys()
-        return e, d, N
+    e = 0   
+    for e in range(2, phi):
+        if gcd(e, phi) == 1:
+            break
+    d = mod_inverse(e, phi)
 
-    def __Euclid_alg(self,a, b):
-        x1 = 0
-        x2 = 1
-        y1 = 1
-        y2 = 0
-        while(b>0):
-            q = a // b
-            r = a - q * b
-            x = x2 - q * x1
-            y = y2 - q * y1
-            a = b 
-            b = r 
-            x2 = x1 
-            x1 = x 
-            y2 = y1 
-            y1 = y 
-        return x2, y2
+    return e, d, n
 
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+def encrypt(m, e, n):
+    return power(m, e, n)
+
+def decrypt(c, d, n):
+    return power(c, d, n)
+    
+def is_prime(a):
+    if a % 2 == 0:
+        return a == 2
+    d = 3
+    while d * d <= a and a % d != 0:
+        d += 2
+    return d * d > a
+def generate_prime():
+    p = 4
+    q = 4
+    while (not (is_prime(q) & is_prime(p))):
+        p = random.randint(1000, 9999)
+        q = random.randint(1000, 9999)
+    return p, q
 
 if __name__ == "__main__":
-    my_rsa = RSA()
-    print(f"\nОткрытый ключ:{my_rsa.open_keys}\n"+
-        f"Закрытый ключ:{my_rsa.close_keys}")
+    e, d, n = generateKeys()
+  
+    print(f"Public Key (e, n): ({e}, {n})")
+    print(f"Private Key (d, n): ({d}, {n})")
+
+    message = "Hi broooo"
+    print(f"Original Message: {message}")
+
+    hex_list = [ord(x) for x in message]
+
+    C = [] 
+
+    for i, mess in enumerate(hex_list):
+        encrypted_message = encrypt(mess, e, n) 
+        C.append(encrypted_message)  
+        print(f"Encrypted Message {i}: {encrypted_message}") 
+
+    for i, encrypted_message in enumerate(C):
+        decrypted = decrypt(encrypted_message, d, n)
+        print(f"Decrypted Message {i}: {chr(decrypted)}") 
