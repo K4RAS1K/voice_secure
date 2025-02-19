@@ -35,11 +35,19 @@ def gcd(a, b):
         a, b = b, a % b
     return a
 
-def encrypt(m, e, n):
-    return power(m, e, n)
+def encrypt(char_list, e, n):
+    C = []
+    for i, mess in enumerate(char_list):
+        encrypted_message = power(mess, e, n)
+        C.append(encrypted_message)  
+    return C
 
-def decrypt(c, d, n):
-    return power(c, d, n)
+def decrypt(char_list, d, n):
+    C = []
+    for i, mess in enumerate(char_list):
+        decrypt_message = power(mess,  d, n)
+        C.append(decrypt_message)  
+    return C
     
 def is_prime(a):
     if a % 2 == 0:
@@ -66,14 +74,8 @@ if __name__ == "__main__":
     print(f"Original Message: {message}")
 
     hex_list = [ord(x) for x in message]
-
-    C = [] 
-
-    for i, mess in enumerate(hex_list):
-        encrypted_message = encrypt(mess, e, n) 
-        C.append(encrypted_message)  
-        print(f"Encrypted Message {i}: {encrypted_message}") 
-
-    for i, encrypted_message in enumerate(C):
-        decrypted = decrypt(encrypted_message, d, n)
-        print(f"Decrypted Message {i}: {chr(decrypted)}") 
+    print(hex_list)
+    C = encrypt(hex_list, e, n) 
+    print(C)
+    D = decrypt(C, d, n) 
+    print(D) 
