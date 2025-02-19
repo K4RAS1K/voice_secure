@@ -12,20 +12,21 @@ class RSA():
             if self.__gcd(e, phi) == 1:
                 break
         d = self.__mod_inverse(e, phi)
-
-        return e, d, n
+        public_key = [e, n]
+        private_key = [d, n]
+        return public_key, private_key
         
-    def encrypt(self, char_list, e, n):
+    def encrypt(self, char_list, public_key):
         C = []
         for i, mess in enumerate(char_list):
-            encrypted_message = self.__power(mess, e, n)
+            encrypted_message = self.__power(mess, public_key[0], public_key[1])
             C.append(encrypted_message)  
         return C
 
-    def decrypt(self,char_list, d, n):
+    def decrypt(self,char_list, private_key):
         C = []
         for i, mess in enumerate(char_list):
-            decrypt_message = self.__power(mess,  d, n)
+            decrypt_message = self.__power(mess,  private_key[0], private_key[1])
             C.append(decrypt_message)  
         return C
 
